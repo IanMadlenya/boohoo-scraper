@@ -1,6 +1,12 @@
 '''
 Image scraper for boohoo.com
 
+Scrapes dynamically loaded images of frontal pose of the model, plus only the
+isolated image of the article of clothing.
+
+Boohoo follows the pattern of the first image being the model, and the third being
+the image of the dress (but there are a handful of exceptions)
+
 Author: Rahul M Patil
 '''
 import os
@@ -92,11 +98,12 @@ def get_images(url, i, driver, model_csv, shirt_csv):
 
 if __name__ == '__main__':
     fnames = loadFilenames('file_names_shirt.csv')
-    i = 937
+    i = 0
     chrome_driver = "chromedriver"
     os.environ["webdriver.chrome.driver"] = chrome_driver
     web_driver = webdriver.Chrome(chrome_driver)
 
+    #store the respective image urls in these csv files
     with open('models_images.csv', 'w') as m:
         with open('shirts_images.csv', 'w') as s:
             while i < len(fnames):

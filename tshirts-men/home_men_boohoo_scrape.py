@@ -6,6 +6,7 @@ def name_scraper(url):
     i = 0
     fnames = []
     with open('file_names_shirt.csv', 'w') as file:
+        #no. of pages = 14, as of today there are 14 pages of 80 products each in the category of male: t-shirts and vests
         while i < 14:
             url_temp = url + "?sz=80&start=" + str(80 * i)
             print(url_temp)
@@ -14,12 +15,13 @@ def name_scraper(url):
             data = req.text
             soup = BeautifulSoup(data, "lxml")
 
-
+            #a simple brute force approach to extract the final 'a' tag that contains the url of each product page
             for div in soup.find_all('div', class_ = 'primary-content'):
                 for li in div.find_all('li', class_ = 'grid-tile'):
                     for product in li.find_all('div', class_ = 'product-name'):
                         for file_name in product.find_all('a', class_ = 'name-link'):
-                            file.write(file_name["href"])
+                            #write all extracted urls into a single csv file
+                            file.write(file_name["href"]) 
                             file.write('\n')
                             fnames.append(file_name["href"])
             i += 1
@@ -29,6 +31,7 @@ def name_scraper(url):
 
 
 if __name__ == '__main__':
+    #the base url for the for the catoegory of men > t-shirts and vests
     url = "http://www.boohoo.com/mens/t-shirts-vests"
     file_list = name_scraper(url)
 
