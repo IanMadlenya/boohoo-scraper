@@ -30,8 +30,9 @@ def loadFilenames(fname):
 
     return files
 
+# to scrape dynamic content
 def get_images(url, i, driver, model_csv, shirt_csv):
-    #to scrape dynamic content
+    # flag to decide whether the current product has enough images or not, use of this will become more clear below
     flag = 1
     driver.get(url)
     timeout = 10
@@ -44,15 +45,21 @@ def get_images(url, i, driver, model_csv, shirt_csv):
 
     #soup = BeautifulSoup(page_html)
 
-    model = driver.find_elements_by_xpath('//*[@id="js-alt-images"]/li[1]/a') #first image is model standing straight
-    cloth = driver.find_elements_by_xpath('//*[@id="js-alt-images"]/li[3]/a') #third image is the isolated image of the dress
+    # first image is model standing straight
+    model = driver.find_elements_by_xpath('//*[@id="js-alt-images"]/li[1]/a')
+    # third image is the isolated image of the dress
+    cloth = driver.find_elements_by_xpath('//*[@id="js-alt-images"]/li[3]/a')
     #thumbs_list = [i.text for i in thumbs]
-    model_pic = model[0].get_attribute('href')   #get the url for the model
 
+    # get the url for the model
+    model_pic = model[0].get_attribute('href')
+
+    # a case where only 2 images so second image is the isolated image of the dress
     if cloth == []:
-        cloth = driver.find_elements_by_xpath('//*[@id="js-alt-images"]/li[2]/a') #a case where only 2 images so second image is the isolated image of the dress
+        cloth = driver.find_elements_by_xpath('//*[@id="js-alt-images"]/li[2]/a')
 
-    if cloth == []:  # the last case where there is only image of the model, and can be completely ignored
+    # the last case where there is only image of the model, and can be completely ignored
+    if cloth == []:
         flag = 0
 
     print(cloth)
@@ -60,22 +67,30 @@ def get_images(url, i, driver, model_csv, shirt_csv):
     if flag == 1:
         cloth_pic = cloth[0].get_attribute('href')   #get the url for the isolated cloth
 
+        # the URLs are of the type 'http://i1.adis.ws/i/boohooamplience/dzz79295_navy_xl_2?$product_page_main_magic_zoom$'
+        # but the part after the '?' can be omitted, and hence only 'http://i1.adis.ws/i/boohooamplience/dzz79295_navy_xl_2' is what we store and use
         q_mark = model_pic.find('?')
         model_pic = model_pic[:q_mark]
 
         q_mark = cloth_pic.find('?')
         cloth_pic = cloth_pic[:q_mark]
 
-        model_csv.write(model_pic)  #add model img url entry to csv file
-        shirt_csv.write(cloth_pic)  #add shirt img url entry to other csv file
+        #add model img url entry to csv file
+        model_csv.write(model_pic)
+        #add shirt img url entry to other csv file
+        shirt_csv.write(cloth_pic)
 
-        model_csv.write('\n')  #new entry in csv file
-        shirt_csv.write('\n')  #new entry in csv file
+        #new entry in csv file
+        model_csv.write('\n')
+        shirt_csv.write('\n')
 
         filename = 'p' + str(i) + '.jpg'
 
-        urllib.request.urlretrieve(model_pic, 'models\\' + filename) #save models photo in model directory
-        urllib.request.urlretrieve(cloth_pic, 'shirts\\' + filename) #save the shirts photo is the shirts directory
+        #save models photo in model directory
+        urllib.request.urlretrieve(model_pic, 'models\\' + filename)
+        time.sleep(1)
+        #save the shirts photo is the shirts directory
+        urllib.request.urlretrieve(cloth_pic, 'shirts\\' + filename)
 
 
 
@@ -93,6 +108,7 @@ if __name__ == '__main__':
             while i < len(fnames):
                 #print(fnames[i])
                 print(fnames[i])
+                time.sleep(1)
                 get_images(str(fnames[i][0]), i, web_driver, m, s)
                 i += 1
 
