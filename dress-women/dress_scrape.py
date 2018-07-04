@@ -14,7 +14,6 @@ from bs4 import BeautifulSoup
 import requests as r
 import csv
 import urllib
-import cv2
 import time
 
 from selenium.webdriver.support.ui import WebDriverWait
@@ -83,7 +82,7 @@ def get_images(url, i, driver, model_csv, shirt_csv):
 if __name__ == '__main__':
     fnames = loadFilenames('file_names_dress.csv')
     i = 2052
-    chrome_driver = "chromedriver"
+    chrome_driver = "chromedriver" #path to your chrome driver that you can download from the link provided in the README
     os.environ["webdriver.chrome.driver"] = chrome_driver
     web_driver = webdriver.Chrome(chrome_driver)
 

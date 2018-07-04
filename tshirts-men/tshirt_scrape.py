@@ -14,7 +14,6 @@ from bs4 import BeautifulSoup
 import requests as r
 import csv
 import urllib
-import cv2
 import time
 
 from selenium.webdriver.support.ui import WebDriverWait
@@ -32,22 +31,7 @@ def loadFilenames(fname):
     return files
 
 def get_images(url, i, driver, model_csv, shirt_csv):
-    #pure html approach that didnt work for boohoo.com as the images are dynamically rendered
-    # url_temp = url.replace("\n", "")
-    # req = r.get(url_temp)
-    # data = req.text
-    # soup = BeautifulSoup(data, "lxml")
-    #
-    # print(soup.prettify())
-    #
-    # for div in soup.find_all('div', class_ = "primary-content"):
-    #     for div_main in div.find_all('div', class_ = "pdp-main"):
-    #         for div_cont in div_main.find_all('div', class_ = "product-image-container"):
-    #             for div_product in div_cont.find_all('div', class_ = "product-thumbnails-container"):
-    #                 print(div_product.prettify())
-
-
-    #attempt to scrape dynamic content
+    #to scrape dynamic content
     flag = 1
     driver.get(url)
     timeout = 10
@@ -99,7 +83,7 @@ def get_images(url, i, driver, model_csv, shirt_csv):
 if __name__ == '__main__':
     fnames = loadFilenames('file_names_shirt.csv')
     i = 0
-    chrome_driver = "chromedriver"
+    chrome_driver = "chromedriver" #path to your chrome driver that you can download from the link provided in the README
     os.environ["webdriver.chrome.driver"] = chrome_driver
     web_driver = webdriver.Chrome(chrome_driver)
 
